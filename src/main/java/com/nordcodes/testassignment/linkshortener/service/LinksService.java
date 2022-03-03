@@ -38,6 +38,10 @@ public class LinksService {
         return shortLink;
     }
 
+    public String loadFullLink(final String shortLink) {
+        return linksDao.loadFullLink(shortLink);
+    }
+
     private String generateShortLink() {
         for (int i = 0; i < MAX_NUM_TRIES; i++) {
             final String shortLink = ShortLinkGenerator.generate();
