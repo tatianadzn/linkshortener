@@ -17,6 +17,7 @@ public class LinksDao {
     private static final String INSERT_QUERY = "INSERT INTO link (short_link, full_link, click_count) VALUES (?, ?, ?)";
     private static final String IF_EXISTS_SHORT_LINK_QUERY = "SELECT EXISTS(SELECT 1 FROM link WHERE short_link = ?)";
     private static final String LOAD_FULL_LINK_BY_SHORT_LINK_QUERY = "SELECT full_link FROM link WHERE short_link = ?";
+    private static final String DELETE_LINK_QUERY = "DELETE FROM link WHERE short_link = ?";
 
     private static final String FULL_LINK_ROW = "full_link";
     private static final String SHORT_LINK_ROW = "short_link";
@@ -43,6 +44,10 @@ public class LinksDao {
         catch (EmptyResultDataAccessException e) {
             throw new LinkNotFoundException("Link not found");
         }
+    }
+
+    public int deleteLink(final String shortLink) {
+        return jdbcTemplate.update(DELETE_LINK_QUERY, shortLink);
     }
 
     public Boolean checkIfExistsShortLink(final String shortLink) {

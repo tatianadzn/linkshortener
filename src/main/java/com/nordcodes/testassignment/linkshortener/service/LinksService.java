@@ -4,6 +4,7 @@ import com.nordcodes.testassignment.linkshortener.dao.LinksDao;
 import com.nordcodes.testassignment.linkshortener.entity.Link;
 import com.nordcodes.testassignment.linkshortener.entity.LinkRegisterRequest;
 import com.nordcodes.testassignment.linkshortener.exceptions.DatabaseException;
+import com.nordcodes.testassignment.linkshortener.exceptions.LinkNotFoundException;
 import com.nordcodes.testassignment.linkshortener.exceptions.ShortLinkGenerationException;
 import com.nordcodes.testassignment.linkshortener.utils.ShortLinkGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class LinksService {
     }
 
     public String registerLink(final LinkRegisterRequest linkRegisterRequest) {
-        final String shortLink = generateShortLink();
+        final String shortLink = generateUniqueShortLink();
         final int result = linksDao.registerLink(linkRegisterRequest, shortLink);
         if (result != 1) {
             throw new DatabaseException("Link cannot be registered due to database issues: " + linkRegisterRequest.getFullLink());
@@ -39,7 +40,18 @@ public class LinksService {
         return linksDao.loadFullLink(shortLink);
     }
 
-    private String generateShortLink() {
+    public void deleteLink(final String shortLink) {
+        if (!linksDao.checkIfExistsShortLink(shortLink)) {
+            throw new LinkNotFoundException("No such link was registered: " + shortLink);
+        }
+
+        final int result = linksDao.deleteLink(shortLink);
+        if (result != 1) {
+            throw new DatabaseException("Link cannot be deleted due to database issues");
+        }
+    }
+
+    private String generateUniqueShortLink() {
         for (int i = 0; i < MAX_NUM_TRIES; i++) {
             final String shortLink = ShortLinkGenerator.generate();
 
