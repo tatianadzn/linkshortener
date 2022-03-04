@@ -4,7 +4,6 @@ import com.nordcodes.testassignment.linkshortener.dao.LinksDao;
 import com.nordcodes.testassignment.linkshortener.entity.Link;
 import com.nordcodes.testassignment.linkshortener.entity.LinkRegisterRequest;
 import com.nordcodes.testassignment.linkshortener.exceptions.DatabaseException;
-import com.nordcodes.testassignment.linkshortener.exceptions.LinkHasBeenAlreadyRegisteredException;
 import com.nordcodes.testassignment.linkshortener.exceptions.ShortLinkGenerationException;
 import com.nordcodes.testassignment.linkshortener.utils.ShortLinkGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +27,6 @@ public class LinksService {
     }
 
     public String registerLink(final LinkRegisterRequest linkRegisterRequest) {
-        validateRegistrationRequest(linkRegisterRequest.getFullLink());
-
         final String shortLink = generateShortLink();
         final int result = linksDao.registerLink(linkRegisterRequest, shortLink);
         if (result != 1) {
@@ -51,11 +48,5 @@ public class LinksService {
             }
         }
         throw new ShortLinkGenerationException("Cannot generate unique short link");
-    }
-
-    private void validateRegistrationRequest(final String fullLink) {
-        if (linksDao.checkIfExistsFullLink(fullLink)) {
-            throw new LinkHasBeenAlreadyRegisteredException("Link has been already registered: " + fullLink);
-        }
     }
 }
