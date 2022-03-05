@@ -17,7 +17,8 @@ CREATE TABLE link_stats (
     link_stats_id BIGINT NOT NULL AUTO_INCREMENT,
     short_link VARCHAR(50) NOT NULL,
     click_count BIGINT NOT NULL,
-    PRIMARY KEY (link_stats_id)
+    PRIMARY KEY (link_stats_id),
+    FOREIGN KEY (short_link) REFERENCES link (short_link) ON DELETE CASCADE
 );
 
 -- insert some data
