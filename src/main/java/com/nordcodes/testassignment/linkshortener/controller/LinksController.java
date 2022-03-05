@@ -2,6 +2,7 @@ package com.nordcodes.testassignment.linkshortener.controller;
 
 import com.nordcodes.testassignment.linkshortener.entity.Link;
 import com.nordcodes.testassignment.linkshortener.entity.LinkRegisterRequest;
+import com.nordcodes.testassignment.linkshortener.entity.Stats;
 import com.nordcodes.testassignment.linkshortener.service.LinksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,5 +48,10 @@ public class LinksController {
     @DeleteMapping("delete/{link}")
     public void deleteLink(@PathVariable String link) {
         linksService.deleteLink(link);
+    }
+
+    @GetMapping("stats/all")
+    public List<Stats> loadStatsTopN(@RequestBody(required = false) Integer count) {
+        return linksService.loadStatsAll(count);
     }
 }
