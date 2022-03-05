@@ -19,13 +19,25 @@ import java.util.List;
 public class LinksDao {
 
     private static final String INSERT_QUERY = "INSERT INTO link (short_link, full_link) VALUES (?, ?)";
-    private static final String INIT_STATS_QUERY = "INSERT INTO link_stats (short_link, click_count) VALUES (?, ?)";
     private static final String IF_EXISTS_SHORT_LINK_QUERY = "SELECT EXISTS(SELECT 1 FROM link WHERE short_link = ?)";
     private static final String LOAD_FULL_LINK_BY_SHORT_LINK_QUERY = "SELECT full_link FROM link WHERE short_link = ?";
     private static final String DELETE_LINK_QUERY = "DELETE FROM link WHERE short_link = ?";
-    private static final String UPDATE_CLICKING_COUNT_QUERY
-            = "UPDATE link_stats SET click_count = click_count + 1 WHERE short_link = ?";
-    private static final String LOAD_STATS_ALL_QUERY = "SELECT short_link, click_count FROM link_stats ORDER BY click_count desc limit ?";
+
+    private static final String LOAD_STATS_ALL_QUERY = "SELECT link.short_link, COUNT(log.user_id) AS click_count "
+            + "FROM clicking_log as log "
+            + "RIGHT JOIN link ON log.short_link = link.short_link "
+            + "GROUP BY link.short_link "
+            + "ORDER BY click_count DESC "
+            + "LIMIT ?";
+
+    private static final String LOAD_STATS_UNIQUE_QUERY = "SELECT link.short_link, COUNT(DISTINCT log.user_id) AS click_count "
+            + "FROM clicking_log as log "
+            + "RIGHT JOIN link ON log.short_link = link.short_link "
+            + "GROUP BY link.short_link "
+            + "ORDER BY click_count DESC "
+            + "LIMIT ?";
+
+    private static final String LOG_CLICKING_QUERY = "INSERT INTO clicking_log (short_link, user_id) VALUES (?, ?)";
 
     private static final String FULL_LINK_ROW = "full_link";
     private static final String SHORT_LINK_ROW = "short_link";
@@ -40,8 +52,7 @@ public class LinksDao {
 
     @Transactional(propagation = Propagation.MANDATORY)
     public void registerLink(final LinkRegisterRequest linkRegisterRequest, final String shortLink) {
-        if (jdbcTemplate.update(INSERT_QUERY, shortLink, linkRegisterRequest.getFullLink()) != 1
-                || jdbcTemplate.update(INIT_STATS_QUERY, shortLink, 0) != 1) {
+        if (jdbcTemplate.update(INSERT_QUERY, shortLink, linkRegisterRequest.getFullLink()) != 1) {
             throw new DatabaseException("Link cannot be registered");
         }
     }
@@ -59,14 +70,18 @@ public class LinksDao {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
-    public void updateClickingCount(final String shortLink) {
-        if (jdbcTemplate.update(UPDATE_CLICKING_COUNT_QUERY, shortLink) != 1) {
-            throw new DatabaseException("Link stats cannot be updated");
+    public void logClicking(final String shortLink, final long userId) {
+        if (jdbcTemplate.update(LOG_CLICKING_QUERY, shortLink, userId) != 1) {
+            throw new DatabaseException("Link click cannot be logged to db");
         }
     }
 
     public List<Stats> loadStatsAll(final int count) {
         return jdbcTemplate.query(LOAD_STATS_ALL_QUERY, getStatsRowMapper(), count);
+    }
+
+    public List<Stats> loadStatsUnique(final int count) {
+        return jdbcTemplate.query(LOAD_STATS_UNIQUE_QUERY, getStatsRowMapper(), count);
     }
 
     public int deleteLink(final String shortLink) {

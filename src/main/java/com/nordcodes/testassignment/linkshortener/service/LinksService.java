@@ -34,8 +34,8 @@ public class LinksService {
     }
 
     @Transactional
-    public String loadFullLink(final String shortLink) {
-        linksDao.updateClickingCount(shortLink);
+    public String loadFullLink(final String shortLink, final long userId) {
+        linksDao.logClicking(shortLink, userId);
         return linksDao.loadFullLink(shortLink);
     }
 
@@ -60,8 +60,13 @@ public class LinksService {
     }
 
     public List<Stats> loadStatsAll(final Integer count) {
-        int statsCount = Optional.ofNullable(count).orElse(properties.getStatsCount());
+        int statsCount = Optional.ofNullable(count).orElse(properties.getStatsCountAll());
         return linksDao.loadStatsAll(statsCount);
+    }
+
+    public List<Stats> loadStatsUnique(final Integer count) {
+        int statsCount = Optional.ofNullable(count).orElse(properties.getStatsCountUnique());
+        return linksDao.loadStatsUnique(statsCount);
     }
 
     @Transactional(propagation = Propagation.MANDATORY)

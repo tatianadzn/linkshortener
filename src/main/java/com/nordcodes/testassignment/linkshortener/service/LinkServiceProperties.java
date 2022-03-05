@@ -6,13 +6,22 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "service.links")
 public class LinkServiceProperties {
-    private int statsCount;
+    private int statsCountAll;
+    private int statsCountUnique;
 
-    public int getStatsCount() {
-        return statsCount;
+    public int getStatsCountAll() {
+        return statsCountAll;
     }
 
-    public void setStatsCount(int statsCount) {
-        this.statsCount = statsCount;
+    public void setStatsCountAll(int statsCountAll) {
+        this.statsCountAll = statsCountAll;
+    }
+
+    public int getStatsCountUnique() {
+        return statsCountUnique;
+    }
+
+    public void setStatsCountUnique(int statsCountUnique) {
+        this.statsCountUnique = statsCountUnique;
     }
 }

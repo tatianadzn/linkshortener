@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -40,8 +41,8 @@ public class LinksController {
     }
 
     @GetMapping("redirect/{link}")
-    public ResponseEntity<Void> redirect(@PathVariable String link) {
-        final String fullLink = linksService.loadFullLink(link);
+    public ResponseEntity<Void> redirect(@PathVariable String link, @RequestParam(name = "id") long userId) {
+        final String fullLink = linksService.loadFullLink(link, userId);
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(fullLink)).build();
     }
 
@@ -53,5 +54,10 @@ public class LinksController {
     @GetMapping("stats/all")
     public List<Stats> loadStatsTopN(@RequestBody(required = false) Integer count) {
         return linksService.loadStatsAll(count);
+    }
+
+    @GetMapping("stats/unique")
+    public List<Stats> loadStatsUniqueTopN(@RequestBody(required = false) Integer count) {
+        return linksService.loadStatsUnique(count);
     }
 }
