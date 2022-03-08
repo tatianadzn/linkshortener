@@ -1,6 +1,5 @@
 package com.nordcodes.testassignment.linkshortener.controller;
 
-import com.nordcodes.testassignment.linkshortener.entity.Link;
 import com.nordcodes.testassignment.linkshortener.entity.LinkRegistrationRequest;
 import com.nordcodes.testassignment.linkshortener.entity.Stats;
 import com.nordcodes.testassignment.linkshortener.service.LinksService;
@@ -54,10 +53,5 @@ public class LinksController {
     @GetMapping("stats/unique")
     public List<Stats> loadStatsUniqueTopN(@RequestBody(required = false) Integer count) {
         return linksService.loadStatsUnique(count);
-    }
-
-    @GetMapping("all")
-    public List<Link> loadAll() {
-        return linksService.loadAll();
     }
 }

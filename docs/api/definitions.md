@@ -2,16 +2,6 @@
 <a name="definitions"></a>
 ## Definitions
 
-<a name="link"></a>
-### Link
-
-|Name|Description|Schema|
-|---|---|---|
-|**expirationDateTime**  <br>*optional*|**Example** : `"string"`|string (date-time)|
-|**fullLink**  <br>*optional*|**Example** : `"string"`|string|
-|**shortLink**  <br>*optional*|**Example** : `"string"`|string|
-
-
 <a name="linkregistrationrequest"></a>
 ### LinkRegistrationRequest
 

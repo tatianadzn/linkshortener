@@ -7,48 +7,6 @@
 Links Controller
 
 
-<a name="loadallusingget"></a>
-#### loadAll
-```
-GET /link/all
-```
-
-
-##### Responses
-
-|HTTP Code|Description|Schema|
-|---|---|---|
-|**200**|OK|< [Link](definitions.md#link) > array|
-|**401**|Unauthorized|No Content|
-|**403**|Forbidden|No Content|
-|**404**|Not Found|No Content|
-
-
-##### Produces
-
-* `\*/*`
-
-
-##### Example HTTP request
-
-###### Request path
-```
-/link/all
-```
-
-
-##### Example HTTP response
-
-###### Response 200
-```json
-[ {
-  "expirationDateTime" : "string",
-  "fullLink" : "string",
-  "shortLink" : "string"
-} ]
-```
-
-
 <a name="deletelinkusingdelete"></a>
 #### deleteLink
 ```

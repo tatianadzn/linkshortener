@@ -57,13 +57,9 @@ public class LinksDao {
         }
     }
 
-    public List<Link> loadAll() {
-        return jdbcTemplate.query("select * from link", getRowMapper());
-    }
-
     public Link loadFullLink(final String shortLink) {
         try {
-            return jdbcTemplate.queryForObject(LOAD_LINK_BY_SHORT_LINK_QUERY, getRowMapper(), shortLink);
+            return jdbcTemplate.queryForObject(LOAD_LINK_BY_SHORT_LINK_QUERY, getLinkRowMapper(), shortLink);
         } catch (EmptyResultDataAccessException e) {
             throw new LinkNotFoundException("Link not found");
         }
@@ -92,7 +88,7 @@ public class LinksDao {
         return jdbcTemplate.queryForObject(IF_EXISTS_SHORT_LINK_QUERY, Boolean.class, shortLink);
     }
 
-    private RowMapper<Link> getRowMapper() {
+    private RowMapper<Link> getLinkRowMapper() {
         return (rs, num) -> {
             Link link = new Link();
             link.setFullLink(rs.getString(FULL_LINK_ROW));

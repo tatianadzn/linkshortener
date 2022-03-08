@@ -33,10 +33,6 @@ public class LinksService {
         this.properties = properties;
     }
 
-    public List<Link> loadAll() {
-        return linksDao.loadAll();
-    }
-
     @Transactional
     public String loadFullLink(final String shortLink, final long userId) {
         linksDao.logClicking(shortLink, userId);
