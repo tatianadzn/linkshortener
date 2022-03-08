@@ -12,6 +12,12 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/v2/api-docs"
+    };
+
     private final CustomFilter customFilter;
 
     @Autowired
@@ -28,9 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/h2-console/**")
-                .permitAll()
-                .anyRequest().authenticated()
+                    .antMatchers(AUTH_WHITELIST).permitAll()
+                    .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(customFilter, BasicAuthenticationFilter.class);
     }

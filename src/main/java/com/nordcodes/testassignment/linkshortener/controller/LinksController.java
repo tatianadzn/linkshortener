@@ -30,11 +30,6 @@ public class LinksController {
         this.linksService = linksService;
     }
 
-    @GetMapping("all")
-    public List<Link> loadAll() {
-        return linksService.loadAll();
-    }
-
     @PostMapping("register")
     public String registerLink(@RequestBody LinkRegistrationRequest linkRegistrationRequest) {
         return linksService.registerLink(linkRegistrationRequest);
@@ -59,5 +54,10 @@ public class LinksController {
     @GetMapping("stats/unique")
     public List<Stats> loadStatsUniqueTopN(@RequestBody(required = false) Integer count) {
         return linksService.loadStatsUnique(count);
+    }
+
+    @GetMapping("all")
+    public List<Link> loadAll() {
+        return linksService.loadAll();
     }
 }
