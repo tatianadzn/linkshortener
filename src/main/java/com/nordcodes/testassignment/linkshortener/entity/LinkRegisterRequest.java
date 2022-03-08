@@ -3,12 +3,12 @@ package com.nordcodes.testassignment.linkshortener.entity;
 public class LinkRegisterRequest {
     private long user_id;
     private String fullLink;
-    private int expirationTimeInMins;
+    private int expirationTimeInDays;
 
-    public LinkRegisterRequest(long user_id, String fullLink, String shortLink, int expirationTimeInMins) {
+    public LinkRegisterRequest(long user_id, String fullLink, int expirationTimeInDays) {
         this.user_id = user_id;
         this.fullLink = fullLink;
-        this.expirationTimeInMins = expirationTimeInMins;
+        this.expirationTimeInDays = expirationTimeInDays;
     }
 
     public long getUser_id() {
@@ -27,11 +27,11 @@ public class LinkRegisterRequest {
         this.fullLink = fullLink;
     }
 
-    public int getExpirationTimeInMins() {
-        return expirationTimeInMins;
+    public int getExpirationTimeInDays() {
+        return expirationTimeInDays;
     }
 
-    public void setExpirationTimeInMins(int expirationTimeInMins) {
-        this.expirationTimeInMins = expirationTimeInMins;
+    public void setExpirationTimeInDays(int expirationTimeInDays) {
+        this.expirationTimeInDays = expirationTimeInDays;
     }
 }

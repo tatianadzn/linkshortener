@@ -5,6 +5,8 @@ import com.nordcodes.testassignment.linkshortener.entity.Link;
 import com.nordcodes.testassignment.linkshortener.entity.LinkRegisterRequest;
 import com.nordcodes.testassignment.linkshortener.entity.Stats;
 import com.nordcodes.testassignment.linkshortener.exceptions.DatabaseException;
+import com.nordcodes.testassignment.linkshortener.exceptions.InvalidParameterException;
+import com.nordcodes.testassignment.linkshortener.exceptions.LinkHasBeenExpiredException;
 import com.nordcodes.testassignment.linkshortener.exceptions.LinkNotFoundException;
 import com.nordcodes.testassignment.linkshortener.exceptions.ShortLinkGenerationException;
 import com.nordcodes.testassignment.linkshortener.utils.ShortLinkGenerator;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +28,7 @@ public class LinksService {
     private final LinkServiceProperties properties;
 
     @Autowired
-    public LinksService(LinksDao linksDao, LinkServiceProperties properties) {
+    public LinksService(final LinksDao linksDao, final LinkServiceProperties properties) {
         this.linksDao = linksDao;
         this.properties = properties;
     }
@@ -36,15 +40,29 @@ public class LinksService {
     @Transactional
     public String loadFullLink(final String shortLink, final long userId) {
         linksDao.logClicking(shortLink, userId);
-        return linksDao.loadFullLink(shortLink);
+        final Link link = linksDao.loadFullLink(shortLink);
+
+        if (link.getExpirationDateTime().isBefore(LocalDateTime.now())) {
+            throw new LinkHasBeenExpiredException("Link was expired at: " + link.getExpirationDateTime());
+        }
+
+        return link.getFullLink();
     }
 
     @Transactional
     public String registerLink(final LinkRegisterRequest linkRegisterRequest) {
+        if (linkRegisterRequest.getExpirationTimeInDays() < 0) {
+            throw new InvalidParameterException("Expiration in days should not be less then 0");
+        }
         final String shortLink = generateUniqueShortLink();
-        linksDao.registerLink(linkRegisterRequest, shortLink);
+        final Timestamp expiration = getExpiration(linkRegisterRequest.getExpirationTimeInDays());
+        linksDao.registerLink(linkRegisterRequest.getFullLink(), shortLink, expiration);
 
         return shortLink;
+    }
+
+    private Timestamp getExpiration(final int days) {
+        return Timestamp.valueOf(LocalDateTime.now().plusDays(days));
     }
 
     @Transactional

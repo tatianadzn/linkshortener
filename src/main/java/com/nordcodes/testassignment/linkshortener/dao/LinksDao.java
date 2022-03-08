@@ -1,7 +1,6 @@
 package com.nordcodes.testassignment.linkshortener.dao;
 
 import com.nordcodes.testassignment.linkshortener.entity.Link;
-import com.nordcodes.testassignment.linkshortener.entity.LinkRegisterRequest;
 import com.nordcodes.testassignment.linkshortener.entity.Stats;
 import com.nordcodes.testassignment.linkshortener.exceptions.DatabaseException;
 import com.nordcodes.testassignment.linkshortener.exceptions.LinkNotFoundException;
@@ -13,14 +12,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Component
 public class LinksDao {
 
-    private static final String INSERT_QUERY = "INSERT INTO link (short_link, full_link) VALUES (?, ?)";
+    private static final String INSERT_QUERY = "INSERT INTO link (short_link, full_link, expiration_datetime) VALUES (?, ?, ?)";
     private static final String IF_EXISTS_SHORT_LINK_QUERY = "SELECT EXISTS(SELECT 1 FROM link WHERE short_link = ?)";
-    private static final String LOAD_FULL_LINK_BY_SHORT_LINK_QUERY = "SELECT full_link FROM link WHERE short_link = ?";
+    private static final String LOAD_LINK_BY_SHORT_LINK_QUERY = "SELECT * FROM link WHERE short_link = ?";
     private static final String DELETE_LINK_QUERY = "DELETE FROM link WHERE short_link = ?";
 
     private static final String LOAD_STATS_ALL_QUERY = "SELECT link.short_link, COUNT(log.user_id) AS click_count "
@@ -51,8 +51,8 @@ public class LinksDao {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
-    public void registerLink(final LinkRegisterRequest linkRegisterRequest, final String shortLink) {
-        if (jdbcTemplate.update(INSERT_QUERY, shortLink, linkRegisterRequest.getFullLink()) != 1) {
+    public void registerLink(final String fullLink, final String shortLink, final Timestamp expiration) {
+        if (jdbcTemplate.update(INSERT_QUERY, shortLink, fullLink, expiration) != 1) {
             throw new DatabaseException("Link cannot be registered");
         }
     }
@@ -61,9 +61,9 @@ public class LinksDao {
         return jdbcTemplate.query("select * from link", getRowMapper());
     }
 
-    public String loadFullLink(final String shortLink) {
+    public Link loadFullLink(final String shortLink) {
         try {
-            return jdbcTemplate.queryForObject(LOAD_FULL_LINK_BY_SHORT_LINK_QUERY, String.class, shortLink);
+            return jdbcTemplate.queryForObject(LOAD_LINK_BY_SHORT_LINK_QUERY, getRowMapper(), shortLink);
         } catch (EmptyResultDataAccessException e) {
             throw new LinkNotFoundException("Link not found");
         }
@@ -97,6 +97,7 @@ public class LinksDao {
             Link link = new Link();
             link.setFullLink(rs.getString(FULL_LINK_ROW));
             link.setShortLink(rs.getString(SHORT_LINK_ROW));
+            link.setExpirationDateTime(rs.getTimestamp("expiration_datetime"));
             return link;
         };
     }

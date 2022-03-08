@@ -10,6 +10,7 @@ CREATE TABLE user (
 CREATE TABLE link (
     short_link VARCHAR(50) NOT NULL,
     full_link VARCHAR(50) NOT NULL,
+    expiration_datetime DATETIME,
     PRIMARY KEY (short_link)
 );
 
@@ -30,11 +31,11 @@ INSERT INTO user (username, secret_key) VALUES
     ('user3', 'secretkey3'),
     ('user4', 'secretkey4')
 ;
-INSERT INTO link (short_link, full_link) VALUES
-    ('goo', 'https://www.google.com/'),
-    ('ym', 'https://market.yandex.ru/'),
-    ('stack', 'https://stackoverflow.com'),
-    ('sqlex', 'https://www.sql-ex.ru/')
+INSERT INTO link (short_link, full_link, expiration_datetime) VALUES
+    ('goo', 'https://www.google.com/', '2028-11-11 13:23:44'),
+    ('ym', 'https://market.yandex.ru/', '2020-11-11 13:23:44'),
+    ('stack', 'https://stackoverflow.com', '2028-11-11 13:23:44'),
+    ('sqlex', 'https://www.sql-ex.ru/', '2028-11-11 13:23:44')
 ;
 INSERT INTO clicking_log (short_link, user_id) VALUES
     ('goo', 1),
