@@ -1,7 +1,7 @@
 package com.nordcodes.testassignment.linkshortener.controller;
 
 import com.nordcodes.testassignment.linkshortener.entity.Link;
-import com.nordcodes.testassignment.linkshortener.entity.LinkRegisterRequest;
+import com.nordcodes.testassignment.linkshortener.entity.LinkRegistrationRequest;
 import com.nordcodes.testassignment.linkshortener.entity.Stats;
 import com.nordcodes.testassignment.linkshortener.service.LinksService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +36,8 @@ public class LinksController {
     }
 
     @PostMapping("register")
-    public String registerLink(@RequestBody LinkRegisterRequest linkRegisterRequest) {
-        return linksService.registerLink(linkRegisterRequest);
+    public String registerLink(@RequestBody LinkRegistrationRequest linkRegistrationRequest) {
+        return linksService.registerLink(linkRegistrationRequest);
     }
 
     @GetMapping("redirect/{link}")

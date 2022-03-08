@@ -2,7 +2,7 @@ package com.nordcodes.testassignment.linkshortener.service;
 
 import com.nordcodes.testassignment.linkshortener.dao.LinksDao;
 import com.nordcodes.testassignment.linkshortener.entity.Link;
-import com.nordcodes.testassignment.linkshortener.entity.LinkRegisterRequest;
+import com.nordcodes.testassignment.linkshortener.entity.LinkRegistrationRequest;
 import com.nordcodes.testassignment.linkshortener.entity.Stats;
 import com.nordcodes.testassignment.linkshortener.exceptions.DatabaseException;
 import com.nordcodes.testassignment.linkshortener.exceptions.InvalidParameterException;
@@ -50,13 +50,13 @@ public class LinksService {
     }
 
     @Transactional
-    public String registerLink(final LinkRegisterRequest linkRegisterRequest) {
-        if (linkRegisterRequest.getExpirationTimeInDays() < 0) {
+    public String registerLink(final LinkRegistrationRequest linkRegistrationRequest) {
+        if (linkRegistrationRequest.getExpirationTimeInDays() < 0) {
             throw new InvalidParameterException("Expiration in days should not be less then 0");
         }
         final String shortLink = generateUniqueShortLink();
-        final Timestamp expiration = getExpiration(linkRegisterRequest.getExpirationTimeInDays());
-        linksDao.registerLink(linkRegisterRequest.getFullLink(), shortLink, expiration);
+        final Timestamp expiration = getExpiration(linkRegistrationRequest.getExpirationTimeInDays());
+        linksDao.registerLink(linkRegistrationRequest.getFullLink(), shortLink, expiration);
 
         return shortLink;
     }

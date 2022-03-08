@@ -1,11 +1,11 @@
 package com.nordcodes.testassignment.linkshortener.entity;
 
-public class LinkRegisterRequest {
+public class LinkRegistrationRequest {
     private long user_id;
     private String fullLink;
     private int expirationTimeInDays;
 
-    public LinkRegisterRequest(long user_id, String fullLink, int expirationTimeInDays) {
+    public LinkRegistrationRequest(long user_id, String fullLink, int expirationTimeInDays) {
         this.user_id = user_id;
         this.fullLink = fullLink;
         this.expirationTimeInDays = expirationTimeInDays;
