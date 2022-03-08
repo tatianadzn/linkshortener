@@ -30,6 +30,7 @@ public class AuthenticationProvider {
         Set<Map.Entry<String, String[]>> entries = parameters.entrySet();
 
         return entries.stream()
+                .sorted(Map.Entry.comparingByKey())
                 .map(entry -> constructTokenSubstring(entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining(DELIMITER))
                 .concat(secretKey);
