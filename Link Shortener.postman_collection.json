@@ -1,0 +1,198 @@
+{
+	"info": {
+		"_postman_id": "e6608784-81ae-4825-b445-8d5e4477d5a0",
+		"name": "Link Shortener",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register link",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer b04abbcee250217c6cf2b7702b656cbbed31d009",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\" : \"1\",\r\n    \"fullLink\" : \"https://github.com\",\r\n    \"expirationTimeInDays\" : \"5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/link/register?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"link",
+						"register"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Redirect",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 4e8cec07c2524626a5660cf4caedca68d2af3620",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/link/redirect/goo?id=1&apar=value",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"link",
+						"redirect",
+						"goo"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						},
+						{
+							"key": "apar",
+							"value": "value"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete link",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer b04abbcee250217c6cf2b7702b656cbbed31d009",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/link/delete/ym?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"link",
+						"delete",
+						"ym"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stats All",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer b04abbcee250217c6cf2b7702b656cbbed31d009",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/link/stats/all?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"link",
+						"stats",
+						"all"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stats Unique",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer b04abbcee250217c6cf2b7702b656cbbed31d009",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/link/stats/unique?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"link",
+						"stats",
+						"unique"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
